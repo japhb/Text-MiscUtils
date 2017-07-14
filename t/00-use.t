@@ -1,5 +1,7 @@
 use Test;
 use Text::MiscUtils;
+use Text::MiscUtils::English;
+use Text::MiscUtils::Layout;
 
 
 plan 1;

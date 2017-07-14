@@ -3,14 +3,17 @@
     "Geoffrey Broadwell"
   ],
   "build-depends" : [ ],
-  "depends" : [ ],
+  "depends" : [
+    "Terminal::ANSIColor"
+  ],
   "description" : "A bag of small text processing tricks",
   "license" : "Artistic-2.0",
   "name" : "Text::MiscUtils",
   "perl" : "6.c",
   "provides" : {
     "Text::MiscUtils" : "lib/Text/MiscUtils.pm6",
-    "Text::MiscUtils::English" : "lib/Text/MiscUtils/English.pm6"
+    "Text::MiscUtils::English" : "lib/Text/MiscUtils/English.pm6",
+    "Text::MiscUtils::Layout" : "lib/Text/MiscUtils/Layout.pm6"
   },
   "resources" : [ ],
   "source-url" : "",
