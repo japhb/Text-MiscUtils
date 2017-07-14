@@ -1,7 +1,9 @@
-use v6.c;
 use Test;
 use Text::MiscUtils;
 
-pass "replace me";
+
+plan 1;
+
+pass "modules loaded successfully";
 
 done-testing;

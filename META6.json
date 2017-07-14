@@ -4,7 +4,7 @@
   ],
   "build-depends" : [ ],
   "depends" : [ ],
-  "description" : "blah blah blah",
+  "description" : "A bag of small text processing tricks",
   "license" : "Artistic-2.0",
   "name" : "Text::MiscUtils",
   "perl" : "6.c",
