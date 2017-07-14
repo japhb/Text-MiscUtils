@@ -9,7 +9,8 @@
   "name" : "Text::MiscUtils",
   "perl" : "6.c",
   "provides" : {
-    "Text::MiscUtils" : "lib/Text/MiscUtils.pm6"
+    "Text::MiscUtils" : "lib/Text/MiscUtils.pm6",
+    "Text::MiscUtils::English" : "lib/Text/MiscUtils/English.pm6"
   },
   "resources" : [ ],
   "source-url" : "",
