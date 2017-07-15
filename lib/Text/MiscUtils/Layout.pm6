@@ -9,8 +9,10 @@ use Terminal::ANSIColor;
 #  Returns an array of wrapped lines with no trailing newlines.
 #  Doesn't try to split single words wider than $width.
 #  Tries to maintain any leading indent, but does not account for tabs.
-sub text-wrap(Int:D $width, Str:D $text is copy) is export {
-    $text .= trim-trailing;
+sub text-wrap(Int:D $width is copy, Str:D $text is copy) is export {
+    $text    .= trim-trailing;
+    $width max= 1;
+
     return ($text,) if colorstrip($text).chars <= $width;
 
     my @pieces = $text.split(/\s+/);
@@ -58,7 +60,7 @@ sub text-columns(Int:D $width, *@blocks, Str:D :$sep = '  ') is export {
 
 #| Render an array of (possibly ANSI colored) text cells into one evenly spaced line justified to $width
 #  Adds at least one space between the cells, even if it makes the line longer than $width.
-sub evenly-spaced($width, *@cells) is export {
+sub evenly-spaced(Int:D $width, *@cells) is export {
     my @c = @cells.grep: *.chars;
     return '' unless @c;
 
