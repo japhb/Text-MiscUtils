@@ -149,7 +149,7 @@ is text-columns(10, :sep<+>,
                 "a b\nde fg hi\njklmnopq",
                 '',
                 "  1 23 456 7890\n a bc def ghij klmno pqrstu\nThe quick brown fox jumped over the insufficiently motivated dog."),
- q:to/COMPLEX/.chomp, 'text-columns with ragged multi-line blocks, custom sep, and more than enough width';  # :
+ q:to/COMPLEX/.chomp, 'text-columns with ragged multi-line blocks, indents, wrapped lines, empty blocks, custom sep, and not quite enough width';  # :
 12        +a b       +          +  1 23 456
 34        +de fg hi  +          +  7890    
           +jklmnopq  +          + a bc def 
