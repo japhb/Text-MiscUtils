@@ -2,10 +2,10 @@ use Test;
 use Text::MiscUtils::Layout;
 
 
-plan 64;
+plan 88;
 
 
-# text-wrap() -- 30 tests
+# text-wrap() -- 36 tests
 is-deeply text-wrap(-7, ''), [''], 'text-wrap with empty string and negative width';
 is-deeply text-wrap( 0, ''), [''], 'text-wrap with empty string and zero width';
 is-deeply text-wrap( 4, ''), [''], 'text-wrap with empty string and positive width';
@@ -60,20 +60,89 @@ is-deeply text-wrap(13, "  \e[1mab   123\e[0m    \e[1m!#^*\e[0m     c\e[1mde\e[0
     [                   "  \e[1mab 123\e[0m \e[1m!#^*\e[0m", "  c\e[1mde\e[0mf"],
     'text-wrap with intermingled ANSI commands, whitespace, and text, and larger width';
 
-# XXXX: Whitespace contains \t \r \n
-# XXXX: Words smaller than width
-# XXXX: Words bigger than width
-# XXXX: Words of mixed lengths
-# XXXX: Multiple lines of text get reformatted to one/fewer/same/more lines
+is-deeply text-wrap(-2, " \t ab cd goldfish?\nfoo\n\nbar  \n  \n \t\tquux\tzazzle\n"),
+    [" \t ab", " \t cd", " \t goldfish?", " \t foo", " \t bar", " \t quux", " \t zazzle"],
+    'text-wrap with mixed indent, multiple lines, and negative width';
+
+is-deeply text-wrap(0, " \t ab cd goldfish?\nfoo\n\nbar  \n  \n \t\tquux\tzazzle\n"),
+    [" \t ab", " \t cd", " \t goldfish?", " \t foo", " \t bar", " \t quux", " \t zazzle"],
+    'text-wrap with mixed indent, multiple lines, and zero width';
+
+is-deeply text-wrap(7, " \t ab cd goldfish?\nfoo\n\nbar  \n  \n \t\tquux\tzazzle\n"),
+    [" \t ab", " \t cd", " \t goldfish?", " \t foo", " \t bar", " \t quux", " \t zazzle"],
+    'text-wrap with mixed indent, multiple lines, and extra small width';
+
+is-deeply text-wrap(10, " \t ab cd goldfish?\nfoo\n\nbar  \n  \n \t\tquux\tzazzle\n"),
+    [" \t ab cd", " \t goldfish?", " \t foo bar", " \t quux", " \t zazzle"],
+    'text-wrap with mixed indent, multiple lines, and small width';
+
+is-deeply text-wrap(18, " \t ab cd goldfish?\nfoo\n\nbar  \n  \n \t\tquux\tzazzle\n"),
+    [" \t ab cd goldfish?", " \t foo bar quux", " \t zazzle"],
+    'text-wrap with mixed indent, multiple lines, and medium width';
+
+is-deeply text-wrap(40, " \t ab cd goldfish?\nfoo\n\nbar  \n  \n \t\tquux\tzazzle\n"),
+    [" \t ab cd goldfish? foo bar quux zazzle"],
+    'text-wrap with mixed indent, multiple lines, and large width';
+
+# XXXX: Whitespace contains \r
 
 
-# text-columns() -- 0 tests
+# text-columns() -- 18 tests
+is text-columns(-3), '', 'text-columns with no blocks and negative width';
+is text-columns( 0), '', 'text-columns with no blocks and zero width';
+is text-columns(12), '', 'text-columns with no blocks and positive width';
 
-# XXXX: No blocks, one block, two blocks, several blocks
-# XXXX: Changing separator
-# XXXX: Empty blocks: one, two, more, mixed in
-# XXXX: Blocks of same lengths, different lengths, different order lengths
-# XXXX: Blocks with short lines, exactly width lines, long lines split in two or more
+is text-columns(-2, :sep<+>), '', 'text-columns with no blocks, custom sep, and negative width';
+is text-columns( 0, :sep<+>), '', 'text-columns with no blocks, custom sep, and zero width';
+is text-columns(11, :sep<+>), '', 'text-columns with no blocks, custom sep, and positive width';
+
+is text-columns(-4, '', :sep<+>), '', 'text-columns with one empty block, custom sep, and negative width';
+is text-columns( 0, '', :sep<+>), '', 'text-columns with one empty block, custom sep, and zero width';
+is text-columns( 4, '', :sep<+>), '    ', 'text-columns with one empty block, custom sep, and positive width';
+
+is text-columns(-5, '', '', :sep<+>), '+', 'text-columns with two empty blocks, custom sep, and negative width';
+is text-columns( 0, '', '', :sep<+>), '+', 'text-columns with two empty blocks, custom sep, and zero width';
+is text-columns( 3, '', '', :sep<+>), '   +   ', 'text-columns with two empty blocks, custom sep, and positive width';
+
+is text-columns(-6, "12\n34\n", "abc\ndefg\nhi", :sep<|>), "12|abc\n34|defg\n|hi",
+    'text-columns with ragged multi-line blocks, custom sep, and negative width';
+
+is text-columns( 0, "12\n34\n", "abc\ndefg\nhi", :sep<|>), "12|abc\n34|defg\n|hi",
+    'text-columns with ragged multi-line blocks, custom sep, and zero width';
+
+is text-columns( 2, "12\n34\n", "abc\ndefg\nhi", :sep<|>), "12|abc\n34|defg\n  |hi",
+    'text-columns with ragged multi-line blocks, custom sep, and insufficient width';
+
+is text-columns( 4, "12\n34\n", "abc\ndefg\nhi", :sep<|>), "12  |abc \n34  |defg\n    |hi  ",
+    'text-columns with ragged multi-line blocks, custom sep, and exactly enough width';
+
+is text-columns( 5, "12\n34\n", "abc\ndefg\nhi", :sep<|>), "12   |abc  \n34   |defg \n     |hi   ",
+    'text-columns with ragged multi-line blocks, custom sep, and more than enough width';
+
+
+# NOTE: THIS TEST CONTAINS INTENTIONAL TRAILING WHITESPACE!
+is text-columns(10, :sep<+>,
+                "12\n34\n",
+                "a b\nde fg hi\njklmnopq",
+                '',
+                "  1 23 456 7890\n a bc def ghij klmno pqrstu\nThe quick brown fox jumped over the insufficiently motivated dog."),
+ q:to/COMPLEX/.chomp, 'text-columns with ragged multi-line blocks, custom sep, and more than enough width';  # :
+12        +a b       +          +  1 23 456
+34        +de fg hi  +          +  7890    
+          +jklmnopq  +          + a bc def 
+          +          +          + ghij     
+          +          +          + klmno    
+          +          +          + pqrstu   
+          +          +          +The quick 
+          +          +          +brown fox 
+          +          +          +jumped    
+          +          +          +over the  
+          +          +          +insufficiently
+          +          +          +motivated 
+          +          +          +dog.      
+COMPLEX
+
+# XXXX: ANSI colors
 
 
 # evenly-spaced() -- 34 tests
