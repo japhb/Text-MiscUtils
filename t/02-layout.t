@@ -2,7 +2,7 @@ use Test;
 use Text::MiscUtils::Layout;
 
 
-plan 88;
+plan 99;
 
 
 # text-wrap() -- 36 tests
@@ -87,7 +87,7 @@ is-deeply text-wrap(40, " \t ab cd goldfish?\nfoo\n\nbar  \n  \n \t\tquux\tzazzl
 # XXXX: Whitespace contains \r
 
 
-# text-columns() -- 18 tests
+# text-columns() -- 29 tests
 is text-columns(-3), '', 'text-columns with no blocks and negative width';
 is text-columns( 0), '', 'text-columns with no blocks and zero width';
 is text-columns(12), '', 'text-columns with no blocks and positive width';
@@ -96,13 +96,36 @@ is text-columns(-2, :sep<+>), '', 'text-columns with no blocks, custom sep, and 
 is text-columns( 0, :sep<+>), '', 'text-columns with no blocks, custom sep, and zero width';
 is text-columns(11, :sep<+>), '', 'text-columns with no blocks, custom sep, and positive width';
 
-is text-columns(-4, '', :sep<+>), '', 'text-columns with one empty block, custom sep, and negative width';
+is text-columns(-4, ''), '', 'text-columns with one empty block and negative width';
+is text-columns( 0, ''), '', 'text-columns with one empty block and zero width';
+is text-columns( 4, ''), '    ', 'text-columns with one empty block and positive width';
+
+is text-columns(-6, '', :sep<+>), '', 'text-columns with one empty block, custom sep, and negative width';
 is text-columns( 0, '', :sep<+>), '', 'text-columns with one empty block, custom sep, and zero width';
 is text-columns( 4, '', :sep<+>), '    ', 'text-columns with one empty block, custom sep, and positive width';
 
-is text-columns(-5, '', '', :sep<+>), '+', 'text-columns with two empty blocks, custom sep, and negative width';
+is text-columns(-5, '', ''), '  ', 'text-columns with two empty blocks and negative width';
+is text-columns( 0, '', ''), '  ', 'text-columns with two empty blocks and zero width';
+is text-columns( 3, '', ''), '        ', 'text-columns with two empty blocks and positive width';
+
+is text-columns(-1, '', '', :sep<+>), '+', 'text-columns with two empty blocks, custom sep, and negative width';
 is text-columns( 0, '', '', :sep<+>), '+', 'text-columns with two empty blocks, custom sep, and zero width';
 is text-columns( 3, '', '', :sep<+>), '   +   ', 'text-columns with two empty blocks, custom sep, and positive width';
+
+is text-columns(-9, "12\n34\n", "abc\ndefg\nhi"), "12  abc\n34  defg\n  hi",
+    'text-columns with ragged multi-line blocks and negative width';
+
+is text-columns( 0, "12\n34\n", "abc\ndefg\nhi"), "12  abc\n34  defg\n  hi",
+    'text-columns with ragged multi-line blocks and zero width';
+
+is text-columns( 1, "12\n34\n", "abc\ndefg\nhi"), "12  abc\n34  defg\n   hi",
+    'text-columns with ragged multi-line blocks and insufficient width';
+
+is text-columns( 4, "12\n34\n", "abc\ndefg\nhi"), "12    abc \n34    defg\n      hi  ",
+    'text-columns with ragged multi-line blocks and exactly enough width';
+
+is text-columns( 5, "12\n34\n", "abc\ndefg\nhi"), "12     abc  \n34     defg \n       hi   ",
+    'text-columns with ragged multi-line blocks and more than enough width';
 
 is text-columns(-6, "12\n34\n", "abc\ndefg\nhi", :sep<|>), "12|abc\n34|defg\n|hi",
     'text-columns with ragged multi-line blocks, custom sep, and negative width';
