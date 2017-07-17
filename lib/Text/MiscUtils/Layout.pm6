@@ -43,6 +43,7 @@ sub text-wrap(Int:D $width is copy, Str:D $text is copy) is export {
 
 
 #| Render an array of (possibly ANSI colored) multi-line text blocks horizontally into $width-sized columns
+#  Thus (5, "12\n34\n", "abc\ndefg\nhi", :sep<|>) --> "12   |abc  \n34   |defg \n     |hi   "
 sub text-columns(Int:D $width, *@blocks, Str:D :$sep = '  ') is export {
     my @fitted;
     for @blocks -> $block {
