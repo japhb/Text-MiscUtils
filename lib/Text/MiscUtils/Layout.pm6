@@ -38,7 +38,7 @@ sub text-wrap(Int:D $width is copy, Str:D $text is copy) is export {
         }
     }
 
-    @lines;
+    @lines
 }
 
 
@@ -76,5 +76,6 @@ sub evenly-spaced(Int:D $width, *@cells) is export {
         $line ~= $text;
         $line ~= ' ' x $spaces unless $col == @c.end;
     }
-    $line;
+
+    $line
 }
