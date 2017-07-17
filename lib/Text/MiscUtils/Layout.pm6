@@ -13,7 +13,7 @@ sub text-wrap(Int:D $width is copy, Str:D $text is copy) is export {
     $text    .= trim-trailing;
     $width max= 1;
 
-    return ('',) if $text.match(/^\s*$/);
+    return [''] if $text.match(/^\s*$/);
 
     my @pieces = $text.split(/\s+/);
 
