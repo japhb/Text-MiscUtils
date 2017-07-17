@@ -2,10 +2,10 @@ use Test;
 use Text::MiscUtils::Layout;
 
 
-plan 58;
+plan 64;
 
 
-# text-wrap() -- 24 tests
+# text-wrap() -- 30 tests
 is text-wrap(-7, ''), '', 'text-wrap with empty string and negative width';
 is text-wrap( 0, ''), '', 'text-wrap with empty string and zero width';
 is text-wrap( 4, ''), '', 'text-wrap with empty string and positive width';
@@ -36,9 +36,29 @@ is text-wrap( 0, "  \e[1m   \e[0m   "), ("  \e[1m", "  \e[0m"), 'text-wrap with 
 is text-wrap( 5, "  \e[1m   \e[0m   "), "  \e[1m \e[0m", 'text-wrap with two ANSI commands, surrounding whitespace, and small width';
 is text-wrap(19, "  \e[1m   \e[0m   "), "  \e[1m \e[0m", 'text-wrap with two ANSI commands, surrounding whitespace, and large width';
 
-# XXXX: ANSI codes next to text
-# XXXX: ANSI codes surrounded by text
-# XXXX: ANSI codes embedded in text
+is text-wrap(-3, "  \e[1mab   123\e[0m    \e[1m!#^*\e[0m     c\e[1mde\e[0mf   "),
+    ("  \e[1mab", "  123\e[0m", "  \e[1m!#^*\e[0m", "  c\e[1mde\e[0mf"),
+    'text-wrap with intermingled ANSI commands, whitespace, and text, and negative width';
+
+is text-wrap(0, "  \e[1mab   123\e[0m    \e[1m!#^*\e[0m     c\e[1mde\e[0mf   "),
+    ("  \e[1mab", "  123\e[0m", "  \e[1m!#^*\e[0m", "  c\e[1mde\e[0mf"),
+    'text-wrap with intermingled ANSI commands, whitespace, and text, and zero width';
+
+is text-wrap(7, "  \e[1mab   123\e[0m    \e[1m!#^*\e[0m     c\e[1mde\e[0mf   "),
+    ("  \e[1mab", "  123\e[0m", "  \e[1m!#^*\e[0m", "  c\e[1mde\e[0mf"),
+    'text-wrap with intermingled ANSI commands, whitespace, and text, and small width';
+
+is text-wrap(8, "  \e[1mab   123\e[0m    \e[1m!#^*\e[0m     c\e[1mde\e[0mf   "),
+    ("  \e[1mab 123\e[0m", "  \e[1m!#^*\e[0m", "  c\e[1mde\e[0mf"),
+    'text-wrap with intermingled ANSI commands, whitespace, and text, and medium width';
+
+is text-wrap(12, "  \e[1mab   123\e[0m    \e[1m!#^*\e[0m     c\e[1mde\e[0mf   "),
+    ("  \e[1mab 123\e[0m", "  \e[1m!#^*\e[0m c\e[1mde\e[0mf"),
+    'text-wrap with intermingled ANSI commands, whitespace, and text, and large width';
+
+is text-wrap(13, "  \e[1mab   123\e[0m    \e[1m!#^*\e[0m     c\e[1mde\e[0mf   "),
+    ("  \e[1mab 123\e[0m \e[1m!#^*\e[0m", "  c\e[1mde\e[0mf"),
+    'text-wrap with intermingled ANSI commands, whitespace, and text, and larger width';
 
 # XXXX: Whitespace contains \t \r \n
 # XXXX: Words smaller than width
