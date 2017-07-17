@@ -2,7 +2,7 @@ use Test;
 use Text::MiscUtils::Layout;
 
 
-plan 99;
+plan 103;
 
 
 # text-wrap() -- 36 tests
@@ -87,7 +87,7 @@ is-deeply text-wrap(40, " \t ab cd goldfish?\nfoo\n\nbar  \n  \n \t\tquux\tzazzl
 # XXXX: Whitespace contains \r
 
 
-# text-columns() -- 29 tests
+# text-columns() -- 33 tests
 is text-columns(-3), '', 'text-columns with no blocks and negative width';
 is text-columns( 0), '', 'text-columns with no blocks and zero width';
 is text-columns(12), '', 'text-columns with no blocks and positive width';
@@ -143,6 +143,19 @@ is text-columns( 5, "12\n34\n", "abc\ndefg\nhi", :sep<|>), "12   |abc  \n34   |d
     'text-columns with ragged multi-line blocks, custom sep, and more than enough width';
 
 
+is text-columns(-2, "12\n34\n", "\e[1ma\e[0m b\ndefg\nhi"), "12  \e[1ma\e[0m\n34  b\n  defg\n  hi",
+    'text-columns with ragged multi-line blocks, embedded ANSI color codes, and negative width';
+
+is text-columns( 0, "12\n34\n", "\e[1ma\e[0m b\ndefg\nhi"), "12  \e[1ma\e[0m\n34  b\n  defg\n  hi",
+    'text-columns with ragged multi-line blocks, embedded ANSI color codes, and zero width';
+
+is text-columns( 2, "12\n34\n", "\e[1ma\e[0m b\ndefg\nhi"), "12  \e[1ma\e[0m \n34  b \n    defg\n    hi",
+    'text-columns with ragged multi-line blocks, embedded ANSI color codes, and not enough width';
+
+is text-columns( 5, "12\n34\n", "\e[1ma\e[0m b\ndefg\nhi"), "12     \e[1ma\e[0m b  \n34     defg \n       hi   ",
+    'text-columns with ragged multi-line blocks, embedded ANSI color codes, and more than enough width';
+
+
 # NOTE: THIS TEST CONTAINS INTENTIONAL TRAILING WHITESPACE!
 is text-columns(10, :sep<+>,
                 "12\n34\n",
@@ -164,8 +177,6 @@ is text-columns(10, :sep<+>,
           +          +          +motivated 
           +          +          +dog.      
 COMPLEX
-
-# XXXX: ANSI colors
 
 
 # evenly-spaced() -- 34 tests
