@@ -6,58 +6,58 @@ plan 64;
 
 
 # text-wrap() -- 30 tests
-is text-wrap(-7, ''), '', 'text-wrap with empty string and negative width';
-is text-wrap( 0, ''), '', 'text-wrap with empty string and zero width';
-is text-wrap( 4, ''), '', 'text-wrap with empty string and positive width';
+is-deeply text-wrap(-7, ''), [''], 'text-wrap with empty string and negative width';
+is-deeply text-wrap( 0, ''), [''], 'text-wrap with empty string and zero width';
+is-deeply text-wrap( 4, ''), [''], 'text-wrap with empty string and positive width';
 
-is text-wrap(-8, '   '), '', 'text-wrap with whitespace only and negative width';
-is text-wrap( 0, '   '), '', 'text-wrap with whitespace only and zero width';
-is text-wrap( 2, '   '), '', 'text-wrap with whitespace only and less width';
-is text-wrap( 3, '   '), '', 'text-wrap with whitespace only and equal width';
-is text-wrap( 8, '   '), '', 'text-wrap with whitespace only and greater width';
+is-deeply text-wrap(-8, '   '), [''], 'text-wrap with whitespace only and negative width';
+is-deeply text-wrap( 0, '   '), [''], 'text-wrap with whitespace only and zero width';
+is-deeply text-wrap( 2, '   '), [''], 'text-wrap with whitespace only and less width';
+is-deeply text-wrap( 3, '   '), [''], 'text-wrap with whitespace only and equal width';
+is-deeply text-wrap( 8, '   '), [''], 'text-wrap with whitespace only and greater width';
 
-is text-wrap(-9, "\e[1m"), "\e[1m", 'text-wrap with one ANSI color command and negative width';
-is text-wrap( 0, "\e[1m"), "\e[1m", 'text-wrap with one ANSI color command and zero width';
-is text-wrap( 2, "\e[1m"), "\e[1m", 'text-wrap with one ANSI color command and small width';
-is text-wrap(12, "\e[1m"), "\e[1m", 'text-wrap with one ANSI color command and large width';
+is-deeply text-wrap(-9, "\e[1m"), ["\e[1m"], 'text-wrap with one ANSI color command and negative width';
+is-deeply text-wrap( 0, "\e[1m"), ["\e[1m"], 'text-wrap with one ANSI color command and zero width';
+is-deeply text-wrap( 2, "\e[1m"), ["\e[1m"], 'text-wrap with one ANSI color command and small width';
+is-deeply text-wrap(12, "\e[1m"), ["\e[1m"], 'text-wrap with one ANSI color command and large width';
 
-is text-wrap(-4, "\e[1m   "), "\e[1m", 'text-wrap with one ANSI command, trailing whitespace, and negative width';
-is text-wrap( 0, "\e[1m   "), "\e[1m", 'text-wrap with one ANSI command, trailing whitespace, and zero width';
-is text-wrap( 3, "\e[1m   "), "\e[1m", 'text-wrap with one ANSI command, trailing whitespace, and small width';
-is text-wrap(15, "\e[1m   "), "\e[1m", 'text-wrap with one ANSI command, trailing whitespace, and large width';
+is-deeply text-wrap(-4, "\e[1m   "), ["\e[1m"], 'text-wrap with one ANSI command, trailing whitespace, and negative width';
+is-deeply text-wrap( 0, "\e[1m   "), ["\e[1m"], 'text-wrap with one ANSI command, trailing whitespace, and zero width';
+is-deeply text-wrap( 3, "\e[1m   "), ["\e[1m"], 'text-wrap with one ANSI command, trailing whitespace, and small width';
+is-deeply text-wrap(15, "\e[1m   "), ["\e[1m"], 'text-wrap with one ANSI command, trailing whitespace, and large width';
 
-is text-wrap(-6, "  \e[1m "), "  \e[1m", 'text-wrap with one ANSI command, surrounding whitespace, and negative width';
-is text-wrap( 0, "  \e[1m "), "  \e[1m", 'text-wrap with one ANSI command, surrounding whitespace, and zero width';
-is text-wrap( 4, "  \e[1m "), "  \e[1m", 'text-wrap with one ANSI command, surrounding whitespace, and small width';
-is text-wrap(20, "  \e[1m "), "  \e[1m", 'text-wrap with one ANSI command, surrounding whitespace, and large width';
+is-deeply text-wrap(-6, "  \e[1m "), ["  \e[1m"], 'text-wrap with one ANSI command, surrounding whitespace, and negative width';
+is-deeply text-wrap( 0, "  \e[1m "), ["  \e[1m"], 'text-wrap with one ANSI command, surrounding whitespace, and zero width';
+is-deeply text-wrap( 4, "  \e[1m "), ["  \e[1m"], 'text-wrap with one ANSI command, surrounding whitespace, and small width';
+is-deeply text-wrap(20, "  \e[1m "), ["  \e[1m"], 'text-wrap with one ANSI command, surrounding whitespace, and large width';
 
-is text-wrap(-5, "  \e[1m   \e[0m   "), ("  \e[1m", "  \e[0m"), 'text-wrap with two ANSI commands, surrounding whitespace, and negative width';
-is text-wrap( 0, "  \e[1m   \e[0m   "), ("  \e[1m", "  \e[0m"), 'text-wrap with two ANSI commands, surrounding whitespace, and zero width';
-is text-wrap( 5, "  \e[1m   \e[0m   "), "  \e[1m \e[0m", 'text-wrap with two ANSI commands, surrounding whitespace, and small width';
-is text-wrap(19, "  \e[1m   \e[0m   "), "  \e[1m \e[0m", 'text-wrap with two ANSI commands, surrounding whitespace, and large width';
+is-deeply text-wrap(-5, "  \e[1m   \e[0m   "), ["  \e[1m", "  \e[0m"], 'text-wrap with two ANSI commands, surrounding whitespace, and negative width';
+is-deeply text-wrap( 0, "  \e[1m   \e[0m   "), ["  \e[1m", "  \e[0m"], 'text-wrap with two ANSI commands, surrounding whitespace, and zero width';
+is-deeply text-wrap( 5, "  \e[1m   \e[0m   "), ["  \e[1m \e[0m"], 'text-wrap with two ANSI commands, surrounding whitespace, and small width';
+is-deeply text-wrap(19, "  \e[1m   \e[0m   "), ["  \e[1m \e[0m"], 'text-wrap with two ANSI commands, surrounding whitespace, and large width';
 
-is text-wrap(-3, "  \e[1mab   123\e[0m    \e[1m!#^*\e[0m     c\e[1mde\e[0mf   "),
-    ("  \e[1mab", "  123\e[0m", "  \e[1m!#^*\e[0m", "  c\e[1mde\e[0mf"),
+is-deeply text-wrap(-3, "  \e[1mab   123\e[0m    \e[1m!#^*\e[0m     c\e[1mde\e[0mf   "),
+    [                   "  \e[1mab", "  123\e[0m", "  \e[1m!#^*\e[0m", "  c\e[1mde\e[0mf"],
     'text-wrap with intermingled ANSI commands, whitespace, and text, and negative width';
 
-is text-wrap(0, "  \e[1mab   123\e[0m    \e[1m!#^*\e[0m     c\e[1mde\e[0mf   "),
-    ("  \e[1mab", "  123\e[0m", "  \e[1m!#^*\e[0m", "  c\e[1mde\e[0mf"),
+is-deeply text-wrap(0, "  \e[1mab   123\e[0m    \e[1m!#^*\e[0m     c\e[1mde\e[0mf   "),
+    [                  "  \e[1mab", "  123\e[0m", "  \e[1m!#^*\e[0m", "  c\e[1mde\e[0mf"],
     'text-wrap with intermingled ANSI commands, whitespace, and text, and zero width';
 
-is text-wrap(7, "  \e[1mab   123\e[0m    \e[1m!#^*\e[0m     c\e[1mde\e[0mf   "),
-    ("  \e[1mab", "  123\e[0m", "  \e[1m!#^*\e[0m", "  c\e[1mde\e[0mf"),
+is-deeply text-wrap(7, "  \e[1mab   123\e[0m    \e[1m!#^*\e[0m     c\e[1mde\e[0mf   "),
+    [                  "  \e[1mab", "  123\e[0m", "  \e[1m!#^*\e[0m", "  c\e[1mde\e[0mf"],
     'text-wrap with intermingled ANSI commands, whitespace, and text, and small width';
 
-is text-wrap(8, "  \e[1mab   123\e[0m    \e[1m!#^*\e[0m     c\e[1mde\e[0mf   "),
-    ("  \e[1mab 123\e[0m", "  \e[1m!#^*\e[0m", "  c\e[1mde\e[0mf"),
+is-deeply text-wrap(8, "  \e[1mab   123\e[0m    \e[1m!#^*\e[0m     c\e[1mde\e[0mf   "),
+    [                  "  \e[1mab 123\e[0m", "  \e[1m!#^*\e[0m", "  c\e[1mde\e[0mf"],
     'text-wrap with intermingled ANSI commands, whitespace, and text, and medium width';
 
-is text-wrap(12, "  \e[1mab   123\e[0m    \e[1m!#^*\e[0m     c\e[1mde\e[0mf   "),
-    ("  \e[1mab 123\e[0m", "  \e[1m!#^*\e[0m c\e[1mde\e[0mf"),
+is-deeply text-wrap(12, "  \e[1mab   123\e[0m    \e[1m!#^*\e[0m     c\e[1mde\e[0mf   "),
+    [                   "  \e[1mab 123\e[0m", "  \e[1m!#^*\e[0m c\e[1mde\e[0mf"],
     'text-wrap with intermingled ANSI commands, whitespace, and text, and large width';
 
-is text-wrap(13, "  \e[1mab   123\e[0m    \e[1m!#^*\e[0m     c\e[1mde\e[0mf   "),
-    ("  \e[1mab 123\e[0m \e[1m!#^*\e[0m", "  c\e[1mde\e[0mf"),
+is-deeply text-wrap(13, "  \e[1mab   123\e[0m    \e[1m!#^*\e[0m     c\e[1mde\e[0mf   "),
+    [                   "  \e[1mab 123\e[0m \e[1m!#^*\e[0m", "  c\e[1mde\e[0mf"],
     'text-wrap with intermingled ANSI commands, whitespace, and text, and larger width';
 
 # XXXX: Whitespace contains \t \r \n
