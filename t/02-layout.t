@@ -40,15 +40,15 @@ is-deeply text-wrap(-3, "  \e[1mab   123\e[0m    \e[1m!#^*\e[0m     c\e[1mde\e[0
     [                   "  \e[1mab", "  123\e[0m", "  \e[1m!#^*\e[0m", "  c\e[1mde\e[0mf"],
     'text-wrap with intermingled ANSI commands, whitespace, and text, and negative width';
 
-is-deeply text-wrap(0, "  \e[1mab   123\e[0m    \e[1m!#^*\e[0m     c\e[1mde\e[0mf   "),
+is-deeply text-wrap( 0, "  \e[1mab   123\e[0m    \e[1m!#^*\e[0m     c\e[1mde\e[0mf   "),
     [                  "  \e[1mab", "  123\e[0m", "  \e[1m!#^*\e[0m", "  c\e[1mde\e[0mf"],
     'text-wrap with intermingled ANSI commands, whitespace, and text, and zero width';
 
-is-deeply text-wrap(7, "  \e[1mab   123\e[0m    \e[1m!#^*\e[0m     c\e[1mde\e[0mf   "),
+is-deeply text-wrap( 7, "  \e[1mab   123\e[0m    \e[1m!#^*\e[0m     c\e[1mde\e[0mf   "),
     [                  "  \e[1mab", "  123\e[0m", "  \e[1m!#^*\e[0m", "  c\e[1mde\e[0mf"],
     'text-wrap with intermingled ANSI commands, whitespace, and text, and small width';
 
-is-deeply text-wrap(8, "  \e[1mab   123\e[0m    \e[1m!#^*\e[0m     c\e[1mde\e[0mf   "),
+is-deeply text-wrap( 8, "  \e[1mab   123\e[0m    \e[1m!#^*\e[0m     c\e[1mde\e[0mf   "),
     [                  "  \e[1mab 123\e[0m", "  \e[1m!#^*\e[0m", "  c\e[1mde\e[0mf"],
     'text-wrap with intermingled ANSI commands, whitespace, and text, and medium width';
 
@@ -64,11 +64,11 @@ is-deeply text-wrap(-2, " \t ab cd goldfish?\nfoo\n\nbar  \n  \n \t\tquux\tzazzl
     [" \t ab", " \t cd", " \t goldfish?", " \t foo", " \t bar", " \t quux", " \t zazzle"],
     'text-wrap with mixed indent, multiple lines, and negative width';
 
-is-deeply text-wrap(0, " \t ab cd goldfish?\nfoo\n\nbar  \n  \n \t\tquux\tzazzle\n"),
+is-deeply text-wrap( 0, " \t ab cd goldfish?\nfoo\n\nbar  \n  \n \t\tquux\tzazzle\n"),
     [" \t ab", " \t cd", " \t goldfish?", " \t foo", " \t bar", " \t quux", " \t zazzle"],
     'text-wrap with mixed indent, multiple lines, and zero width';
 
-is-deeply text-wrap(7, " \t ab cd goldfish?\nfoo\n\nbar  \n  \n \t\tquux\tzazzle\n"),
+is-deeply text-wrap( 7, " \t ab cd goldfish?\nfoo\n\nbar  \n  \n \t\tquux\tzazzle\n"),
     [" \t ab", " \t cd", " \t goldfish?", " \t foo", " \t bar", " \t quux", " \t zazzle"],
     'text-wrap with mixed indent, multiple lines, and extra small width';
 
