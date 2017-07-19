@@ -1,5 +1,5 @@
 use v6.c;
-unit class Text::MiscUtils:ver<0.0.1>;
+unit class Text::MiscUtils:ver<0.0.2>;
 
 
 =begin pod
