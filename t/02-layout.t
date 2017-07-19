@@ -2,43 +2,33 @@ use Test;
 use Text::MiscUtils::Layout;
 
 
-plan 103;
+plan 80;
 
 
-# text-wrap() -- 36 tests
-is-deeply text-wrap(-7, ''), [''], 'text-wrap with empty string and negative width';
+# text-wrap() -- 28 tests
 is-deeply text-wrap( 0, ''), [''], 'text-wrap with empty string and zero width';
 is-deeply text-wrap( 4, ''), [''], 'text-wrap with empty string and positive width';
 
-is-deeply text-wrap(-8, '   '), [''], 'text-wrap with whitespace only and negative width';
 is-deeply text-wrap( 0, '   '), [''], 'text-wrap with whitespace only and zero width';
 is-deeply text-wrap( 2, '   '), [''], 'text-wrap with whitespace only and less width';
 is-deeply text-wrap( 3, '   '), [''], 'text-wrap with whitespace only and equal width';
 is-deeply text-wrap( 8, '   '), [''], 'text-wrap with whitespace only and greater width';
 
-is-deeply text-wrap(-9, "\e[1m"), ["\e[1m"], 'text-wrap with one ANSI color command and negative width';
 is-deeply text-wrap( 0, "\e[1m"), ["\e[1m"], 'text-wrap with one ANSI color command and zero width';
 is-deeply text-wrap( 2, "\e[1m"), ["\e[1m"], 'text-wrap with one ANSI color command and small width';
 is-deeply text-wrap(12, "\e[1m"), ["\e[1m"], 'text-wrap with one ANSI color command and large width';
 
-is-deeply text-wrap(-4, "\e[1m   "), ["\e[1m"], 'text-wrap with one ANSI command, trailing whitespace, and negative width';
 is-deeply text-wrap( 0, "\e[1m   "), ["\e[1m"], 'text-wrap with one ANSI command, trailing whitespace, and zero width';
 is-deeply text-wrap( 3, "\e[1m   "), ["\e[1m"], 'text-wrap with one ANSI command, trailing whitespace, and small width';
 is-deeply text-wrap(15, "\e[1m   "), ["\e[1m"], 'text-wrap with one ANSI command, trailing whitespace, and large width';
 
-is-deeply text-wrap(-6, "  \e[1m "), ["  \e[1m"], 'text-wrap with one ANSI command, surrounding whitespace, and negative width';
 is-deeply text-wrap( 0, "  \e[1m "), ["  \e[1m"], 'text-wrap with one ANSI command, surrounding whitespace, and zero width';
 is-deeply text-wrap( 4, "  \e[1m "), ["  \e[1m"], 'text-wrap with one ANSI command, surrounding whitespace, and small width';
 is-deeply text-wrap(20, "  \e[1m "), ["  \e[1m"], 'text-wrap with one ANSI command, surrounding whitespace, and large width';
 
-is-deeply text-wrap(-5, "  \e[1m   \e[0m   "), ["  \e[1m", "  \e[0m"], 'text-wrap with two ANSI commands, surrounding whitespace, and negative width';
 is-deeply text-wrap( 0, "  \e[1m   \e[0m   "), ["  \e[1m", "  \e[0m"], 'text-wrap with two ANSI commands, surrounding whitespace, and zero width';
 is-deeply text-wrap( 5, "  \e[1m   \e[0m   "), ["  \e[1m \e[0m"], 'text-wrap with two ANSI commands, surrounding whitespace, and small width';
 is-deeply text-wrap(19, "  \e[1m   \e[0m   "), ["  \e[1m \e[0m"], 'text-wrap with two ANSI commands, surrounding whitespace, and large width';
-
-is-deeply text-wrap(-3, "  \e[1mab   123\e[0m    \e[1m!#^*\e[0m     c\e[1mde\e[0mf   "),
-    [                   "  \e[1mab", "  123\e[0m", "  \e[1m!#^*\e[0m", "  c\e[1mde\e[0mf"],
-    'text-wrap with intermingled ANSI commands, whitespace, and text, and negative width';
 
 is-deeply text-wrap( 0, "  \e[1mab   123\e[0m    \e[1m!#^*\e[0m     c\e[1mde\e[0mf   "),
     [                  "  \e[1mab", "  123\e[0m", "  \e[1m!#^*\e[0m", "  c\e[1mde\e[0mf"],
@@ -59,10 +49,6 @@ is-deeply text-wrap(12, "  \e[1mab   123\e[0m    \e[1m!#^*\e[0m     c\e[1mde\e[0
 is-deeply text-wrap(13, "  \e[1mab   123\e[0m    \e[1m!#^*\e[0m     c\e[1mde\e[0mf   "),
     [                   "  \e[1mab 123\e[0m \e[1m!#^*\e[0m", "  c\e[1mde\e[0mf"],
     'text-wrap with intermingled ANSI commands, whitespace, and text, and larger width';
-
-is-deeply text-wrap(-2, " \t ab cd goldfish?\nfoo\n\nbar  \n  \n \t\tquux\tzazzle\n"),
-    [" \t ab", " \t cd", " \t goldfish?", " \t foo", " \t bar", " \t quux", " \t zazzle"],
-    'text-wrap with mixed indent, multiple lines, and negative width';
 
 is-deeply text-wrap( 0, " \t ab cd goldfish?\nfoo\n\nbar  \n  \n \t\tquux\tzazzle\n"),
     [" \t ab", " \t cd", " \t goldfish?", " \t foo", " \t bar", " \t quux", " \t zazzle"],
@@ -87,33 +73,24 @@ is-deeply text-wrap(40, " \t ab cd goldfish?\nfoo\n\nbar  \n  \n \t\tquux\tzazzl
 # XXXX: Whitespace contains \r
 
 
-# text-columns() -- 33 tests
-is text-columns(-3), '', 'text-columns with no blocks and negative width';
+# text-columns() -- 24 tests
 is text-columns( 0), '', 'text-columns with no blocks and zero width';
 is text-columns(12), '', 'text-columns with no blocks and positive width';
 
-is text-columns(-2, :sep<+>), '', 'text-columns with no blocks, custom sep, and negative width';
 is text-columns( 0, :sep<+>), '', 'text-columns with no blocks, custom sep, and zero width';
 is text-columns(11, :sep<+>), '', 'text-columns with no blocks, custom sep, and positive width';
 
-is text-columns(-4, ''), '', 'text-columns with one empty block and negative width';
 is text-columns( 0, ''), '', 'text-columns with one empty block and zero width';
 is text-columns( 4, ''), '    ', 'text-columns with one empty block and positive width';
 
-is text-columns(-6, '', :sep<+>), '', 'text-columns with one empty block, custom sep, and negative width';
 is text-columns( 0, '', :sep<+>), '', 'text-columns with one empty block, custom sep, and zero width';
 is text-columns( 4, '', :sep<+>), '    ', 'text-columns with one empty block, custom sep, and positive width';
 
-is text-columns(-5, '', ''), '  ', 'text-columns with two empty blocks and negative width';
 is text-columns( 0, '', ''), '  ', 'text-columns with two empty blocks and zero width';
 is text-columns( 3, '', ''), '        ', 'text-columns with two empty blocks and positive width';
 
-is text-columns(-1, '', '', :sep<+>), '+', 'text-columns with two empty blocks, custom sep, and negative width';
 is text-columns( 0, '', '', :sep<+>), '+', 'text-columns with two empty blocks, custom sep, and zero width';
 is text-columns( 3, '', '', :sep<+>), '   +   ', 'text-columns with two empty blocks, custom sep, and positive width';
-
-is text-columns(-9, "12\n34\n", "abc\ndefg\nhi"), "12  abc\n34  defg\n  hi",
-    'text-columns with ragged multi-line blocks and negative width';
 
 is text-columns( 0, "12\n34\n", "abc\ndefg\nhi"), "12  abc\n34  defg\n  hi",
     'text-columns with ragged multi-line blocks and zero width';
@@ -127,9 +104,6 @@ is text-columns( 4, "12\n34\n", "abc\ndefg\nhi"), "12    abc \n34    defg\n     
 is text-columns( 5, "12\n34\n", "abc\ndefg\nhi"), "12     abc  \n34     defg \n       hi   ",
     'text-columns with ragged multi-line blocks and more than enough width';
 
-is text-columns(-6, "12\n34\n", "abc\ndefg\nhi", :sep<|>), "12|abc\n34|defg\n|hi",
-    'text-columns with ragged multi-line blocks, custom sep, and negative width';
-
 is text-columns( 0, "12\n34\n", "abc\ndefg\nhi", :sep<|>), "12|abc\n34|defg\n|hi",
     'text-columns with ragged multi-line blocks, custom sep, and zero width';
 
@@ -141,10 +115,6 @@ is text-columns( 4, "12\n34\n", "abc\ndefg\nhi", :sep<|>), "12  |abc \n34  |defg
 
 is text-columns( 5, "12\n34\n", "abc\ndefg\nhi", :sep<|>), "12   |abc  \n34   |defg \n     |hi   ",
     'text-columns with ragged multi-line blocks, custom sep, and more than enough width';
-
-
-is text-columns(-2, "12\n34\n", "\e[1ma\e[0m b\ndefg\nhi"), "12  \e[1ma\e[0m\n34  b\n  defg\n  hi",
-    'text-columns with ragged multi-line blocks, embedded ANSI color codes, and negative width';
 
 is text-columns( 0, "12\n34\n", "\e[1ma\e[0m b\ndefg\nhi"), "12  \e[1ma\e[0m\n34  b\n  defg\n  hi",
     'text-columns with ragged multi-line blocks, embedded ANSI color codes, and zero width';
@@ -179,24 +149,19 @@ is text-columns(10, :sep<+>,
 COMPLEX
 
 
-# evenly-spaced() -- 34 tests
-is evenly-spaced(-15), '', 'evenly-spaced with no cells and negative width';
+# evenly-spaced() -- 28 tests
 is evenly-spaced(  0), '', 'evenly-spaced with no cells and zero width';
 is evenly-spaced(  5), '', 'evenly-spaced with no cells and positive width';
 
-is evenly-spaced(-37, ''), '', 'evenly-spaced with one empty cell and negative width';
 is evenly-spaced(  0, ''), '', 'evenly-spaced with one empty cell and zero width';
 is evenly-spaced( 12, ''), '', 'evenly-spaced with one empty cell and positive width';
 
-is evenly-spaced(-16, '', '', ''), '', 'evenly-spaced with several empty cells and negative width';
 is evenly-spaced(  0, '', '', ''), '', 'evenly-spaced with several empty cells and zero width';
 is evenly-spaced(  4, '', '', ''), '', 'evenly-spaced with several empty cells and positive width';
 
-is evenly-spaced( -3, 'a', '', ''), 'a', 'evenly-spaced with one non-empty cell and negative width';
 is evenly-spaced(  0, '', 'b', ''), 'b', 'evenly-spaced with one non-empty cell and zero width';
 is evenly-spaced(  6, '', '', 'c'), 'c', 'evenly-spaced with one non-empty cell and positive width';
 
-is evenly-spaced( -7, 'a', 'b', ''), 'a b', 'evenly-spaced with two non-empty cells and negative width';
 is evenly-spaced(  0, 'a', '', 'b'), 'a b', 'evenly-spaced with two non-empty cells and zero width';
 is evenly-spaced(  2, '', 'a', 'b'), 'a b', 'evenly-spaced with two non-empty cells and insufficient width';
 is evenly-spaced(  3, 'a', '', 'b'), 'a b', 'evenly-spaced with two non-empty cells and just enough width';
@@ -204,7 +169,6 @@ is evenly-spaced(  4, 'a', 'b', ''), 'a  b', 'evenly-spaced with two non-empty c
 is evenly-spaced(  5, '', 'a', 'b'), 'a   b', 'evenly-spaced with two non-empty cells and more extra width';
 is evenly-spaced(  8, 'a', '', 'b'), 'a      b', 'evenly-spaced with two non-empty cells and lots of extra width';
 
-is evenly-spaced( -7, 'a', 'b', 'c'), 'a b c', 'evenly-spaced with three non-empty cells and negative width';
 is evenly-spaced(  0, 'a', 'b', 'c'), 'a b c', 'evenly-spaced with three non-empty cells and zero width';
 is evenly-spaced(  2, 'a', 'b', 'c'), 'a b c', 'evenly-spaced with three non-empty cells and insufficient width';
 is evenly-spaced(  5, 'a', 'b', 'c'), 'a b c', 'evenly-spaced with three non-empty cells and just enough width';
