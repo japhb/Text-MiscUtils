@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/japhb/Text-MiscUtils.svg?branch=master)](https://travis-ci.org/japhb/Text-MiscUtils)
+
 NAME
 ====
 
