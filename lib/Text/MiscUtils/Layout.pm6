@@ -5,6 +5,13 @@ unit module Text::MiscUtils::Layout;
 use Terminal::ANSIColor;
 
 
+#| Calculate monospaced width of a single line of text, ignoring ANSI colors
+#  XXXX: Should also handle Unicode full width graphemes, but doesn't yet.
+sub text-width(Str:D $text) {
+    colorstrip($text).chars
+}
+
+
 #| Wrap a single line of (possibly ANSI colored) $text to a given $width
 #  Returns an array of wrapped lines with no trailing newlines.
 #  Doesn't try to split single words wider than $width.
@@ -20,14 +27,14 @@ sub text-wrap(UInt:D $width is copy, Str:D $text is copy) is export {
     my $indent = '';
     if !@pieces[0] {
         @pieces.shift;
-        $indent = $text.match(/^(\s+)/)[0];
+        $indent = ~$text.match(/^(\s+)/)[0];
     }
-    my $ilen = $indent.chars;
+    my $ilen = text-width($indent);
 
     my @lines;
     my $cur = 0;
     while @pieces.shift -> $piece {
-        my $len = colorstrip($piece).chars;
+        my $len = text-width($piece);
         if !$cur || $cur + $len + 1 > $width {
             @lines.push: "$indent$piece";
             $cur = $ilen + $len;
@@ -48,7 +55,7 @@ sub text-columns(UInt:D $width, *@blocks, Str:D :$sep = '  ', Bool :$force-wrap)
     my @fitted;
     for @blocks -> $block {
         @fitted.push: $block.split(/\n/).flatmap({
-            colorstrip($_).chars <= $width && !$force-wrap ?? $_ !! text-wrap($width, $_)
+            text-width($_) <= $width && !$force-wrap ?? $_ !! text-wrap($width, $_)
         });
     }
 
@@ -57,7 +64,7 @@ sub text-columns(UInt:D $width, *@blocks, Str:D :$sep = '  ', Bool :$force-wrap)
     my $max = @fitted.map(*.elems).max;
     my @rows = zip @fitted.map(*.[^$max]);
 
-    @rows.map({ .map({ my $row = $^a || ''; $row ~ ' ' x max(0, $width - colorstrip($row).chars) }).join($sep) }).join("\n")
+    @rows.map({ .map({ my $row = $^a || ''; $row ~ ' ' x max(0, $width - text-width($row)) }).join($sep) }).join("\n")
 }
 
 
@@ -68,7 +75,7 @@ sub evenly-spaced(UInt:D $width, *@cells) is export {
     return '' unless @c;
 
     my $gaps  = max 1, @c - 1;
-    my $chars = @c.map({ colorstrip($_).chars }).sum;
+    my $chars = @c.map({ text-width($_) }).sum;
     my $pad   = ($width - $chars) / $gaps;
 
     my $line = '';

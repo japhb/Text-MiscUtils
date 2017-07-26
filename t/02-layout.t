@@ -5,6 +5,9 @@ use Text::MiscUtils::Layout;
 plan 80;
 
 
+# text-width() -- XXXX: NEEDS TESTS
+
+
 # text-wrap() -- 28 tests
 is-deeply text-wrap( 0, ''), [''], 'text-wrap with empty string and zero width';
 is-deeply text-wrap( 4, ''), [''], 'text-wrap with empty string and positive width';
