@@ -125,6 +125,8 @@ is text-columns( 2, "12\n34\n", "\e[1ma\e[0m b\ndefg\nhi"), "12  \e[1ma\e[0m \n3
 is text-columns( 5, "12\n34\n", "\e[1ma\e[0m b\ndefg\nhi"), "12     \e[1ma\e[0m b  \n34     defg \n       hi   ",
     'text-columns with ragged multi-line blocks, embedded ANSI color codes, and more than enough width';
 
+# XXXX: force-wrap on and off
+
 
 # NOTE: THIS TEST CONTAINS INTENTIONAL TRAILING WHITESPACE!
 is text-columns(10, :sep<+>,

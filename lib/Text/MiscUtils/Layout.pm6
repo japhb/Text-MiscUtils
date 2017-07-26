@@ -44,10 +44,12 @@ sub text-wrap(UInt:D $width is copy, Str:D $text is copy) is export {
 
 #| Render an array of (possibly ANSI colored) multi-line text blocks horizontally into $width-sized columns
 #  Thus (5, "12\n34\n", "abc\ndefg\nhi", :sep<|>) --> "12   |abc  \n34   |defg \n     |hi   "
-sub text-columns(UInt:D $width, *@blocks, Str:D :$sep = '  ') is export {
+sub text-columns(UInt:D $width, *@blocks, Str:D :$sep = '  ', Bool :$force-wrap) is export {
     my @fitted;
     for @blocks -> $block {
-         @fitted.push: $block.split(/\n/).flatmap({ text-wrap($width, $_) });
+        @fitted.push: $block.split(/\n/).flatmap({
+            colorstrip($_).chars <= $width && !$force-wrap ?? $_ !! text-wrap($width, $_)
+        });
     }
 
     # See http://irclog.perlgeek.de/perl6/2016-07-13#i_12834465
