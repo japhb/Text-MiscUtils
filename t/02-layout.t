@@ -2,13 +2,13 @@ use Test;
 use Text::MiscUtils::Layout;
 
 
-plan 80;
+plan 75;
 
 
 # text-width() -- XXXX: NEEDS TESTS
 
 
-# text-wrap() -- 28 tests
+# text-wrap() -- 23 tests
 is-deeply text-wrap( 0, ''), [''], 'text-wrap with empty string and zero width';
 is-deeply text-wrap( 4, ''), [''], 'text-wrap with empty string and positive width';
 
@@ -52,28 +52,6 @@ is-deeply text-wrap(12, "  \e[1mab   123\e[0m    \e[1m!#^*\e[0m     c\e[1mde\e[0
 is-deeply text-wrap(13, "  \e[1mab   123\e[0m    \e[1m!#^*\e[0m     c\e[1mde\e[0mf   "),
     [                   "  \e[1mab 123\e[0m \e[1m!#^*\e[0m", "  c\e[1mde\e[0mf"],
     'text-wrap with intermingled ANSI commands, whitespace, and text, and larger width';
-
-is-deeply text-wrap( 0, " \t ab cd goldfish?\nfoo\n\nbar  \n  \n \t\tquux\tzazzle\n"),
-    [" \t ab", " \t cd", " \t goldfish?", " \t foo", " \t bar", " \t quux", " \t zazzle"],
-    'text-wrap with mixed indent, multiple lines, and zero width';
-
-is-deeply text-wrap( 7, " \t ab cd goldfish?\nfoo\n\nbar  \n  \n \t\tquux\tzazzle\n"),
-    [" \t ab", " \t cd", " \t goldfish?", " \t foo", " \t bar", " \t quux", " \t zazzle"],
-    'text-wrap with mixed indent, multiple lines, and extra small width';
-
-is-deeply text-wrap(10, " \t ab cd goldfish?\nfoo\n\nbar  \n  \n \t\tquux\tzazzle\n"),
-    [" \t ab cd", " \t goldfish?", " \t foo bar", " \t quux", " \t zazzle"],
-    'text-wrap with mixed indent, multiple lines, and small width';
-
-is-deeply text-wrap(18, " \t ab cd goldfish?\nfoo\n\nbar  \n  \n \t\tquux\tzazzle\n"),
-    [" \t ab cd goldfish?", " \t foo bar quux", " \t zazzle"],
-    'text-wrap with mixed indent, multiple lines, and medium width';
-
-is-deeply text-wrap(40, " \t ab cd goldfish?\nfoo\n\nbar  \n  \n \t\tquux\tzazzle\n"),
-    [" \t ab cd goldfish? foo bar quux zazzle"],
-    'text-wrap with mixed indent, multiple lines, and large width';
-
-# XXXX: Whitespace contains \r
 
 
 # text-columns() -- 24 tests
