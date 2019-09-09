@@ -6,9 +6,23 @@ use Terminal::ANSIColor;
 
 
 #| Calculate monospaced width of a single line of text, ignoring ANSI colors
-#  XXXX: Should also handle Unicode full width graphemes, but doesn't yet.
-sub text-width(Str:D $text) {
-    colorstrip($text).chars
+#  XXXX: Does not handle cursor-movement control characters such as TAB
+sub terminal-width(Str:D $text, Bool :$wide-context = False) is export {
+    # OLD APPROXIMATION, simply counting NFG characters
+    # colorstrip($text).chars
+
+    # Unicode TR11 approximation, based on legacy character set display width
+    # compatibility and General_Category visibility -- first strip out ANSI
+    # codes and likely invisible/non-spacing Unicode characters, then sum the
+    # counts of remaining characters in each width category
+    my %ignore is Set = < Mn Mc Me Cc Cf Cs Co Cn >;
+    my $counts = colorstrip($text).ords
+                 .grep({ !%ignore{uniprop-str($_, 'General_Category')} })
+                 .map({ uniprop-str($_, 'East_Asian_Width') }).Bag;
+
+    $counts<N> + $counts<Na> + $counts<H>   # Generally narrow
+    + 2 * ($counts<F> + $counts<W>)         # Always wide
+    + (1 + $wide-context) * $counts<A>      # Context-dependent
 }
 
 
@@ -29,12 +43,12 @@ sub text-wrap(UInt:D $width is copy, Str:D $text is copy) is export {
         @pieces.shift;
         $indent = ~$text.match(/^(\s+)/)[0];
     }
-    my $ilen = text-width($indent);
+    my $ilen = terminal-width($indent);
 
     my @lines;
     my $cur = 0;
     while @pieces.shift -> $piece {
-        my $len = text-width($piece);
+        my $len = terminal-width($piece);
         if !$cur || $cur + $len + 1 > $width {
             @lines.push: "$indent$piece";
             $cur = $ilen + $len;
@@ -55,7 +69,7 @@ sub text-columns(UInt:D $width, *@blocks, Str:D :$sep = '  ', Bool :$force-wrap)
     my @fitted;
     for @blocks -> $block {
         @fitted.push: $block.split(/\n/).flatmap({
-            text-width($_) <= $width && !$force-wrap ?? $_ !! text-wrap($width, $_)
+            terminal-width($_) <= $width && !$force-wrap ?? $_ !! text-wrap($width, $_)
         });
     }
 
@@ -64,7 +78,7 @@ sub text-columns(UInt:D $width, *@blocks, Str:D :$sep = '  ', Bool :$force-wrap)
     my $max = @fitted.map(*.elems).max;
     my @rows = zip @fitted.map(*.[^$max]);
 
-    @rows.map({ .map({ my $row = $^a || ''; $row ~ ' ' x max(0, $width - text-width($row)) }).join($sep) }).join("\n")
+    @rows.map({ .map({ my $row = $^a || ''; $row ~ ' ' x max(0, $width - terminal-width($row)) }).join($sep) }).join("\n")
 }
 
 
@@ -75,7 +89,7 @@ sub evenly-spaced(UInt:D $width, *@cells) is export {
     return '' unless @c;
 
     my $gaps  = max 1, @c - 1;
-    my $chars = @c.map({ text-width($_) }).sum;
+    my $chars = @c.map({ terminal-width($_) }).sum;
     my $pad   = ($width - $chars) / $gaps;
 
     my $line = '';

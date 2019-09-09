@@ -5,7 +5,7 @@ use Text::MiscUtils::Layout;
 plan 75;
 
 
-# text-width() -- XXXX: NEEDS TESTS
+# terminal-width() -- XXXX: NEEDS TESTS
 
 
 # text-wrap() -- 23 tests
