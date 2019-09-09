@@ -42,7 +42,7 @@ DESCRIPTION
 
 Text::MiscUtils is a collection of small text processing routines, none of which are complex enough to merit their own distribution, but in aggregate add up to a bunch of finicky boilerplate no one should have to write yet again.
 
-They get regular use by my other modules/programs, but are by no means perfect. For example, while the utilities in Text::MiscUtils::Layout should work fine with embedded ANSI color codes (ignoring them for purposes of calculating space used), they don't currently handle Unicode full width characters properly, treating them as width 1 instead of width 2.
+They get regular use by my other modules/programs, but are by no means perfect. For example, while the utilities in Text::MiscUtils::Layout should work fine with embedded ANSI color codes (ignoring them for purposes of calculating space used) and will approximate Unicode width semantics according to Unicode TR11, they don't currently handle Unicode cursor-moving control characters (such as TAB and CR) or the many non-color ANSI control sequences.
 
 AUTHOR
 ======
