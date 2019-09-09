@@ -58,7 +58,7 @@ Geoffrey Broadwell <gjb@sonic.net>
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright 2016-2017 Geoffrey Broadwell
+Copyright 2016-2019 Geoffrey Broadwell
 
 This library is free software; you can redistribute it and/or modify it under
 the Artistic License 2.0.
