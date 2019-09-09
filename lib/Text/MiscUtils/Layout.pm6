@@ -7,7 +7,7 @@ use Terminal::ANSIColor;
 
 #| Calculate monospaced width of a single line of text, ignoring ANSI colors
 #  XXXX: Does not handle cursor-movement control characters such as TAB
-sub terminal-width(Str:D $text, Bool :$wide-context = False) is export {
+sub duospace-width(Str:D $text, Bool :$wide-context = False) is export {
     # OLD APPROXIMATION, simply counting NFG characters
     # colorstrip($text).chars
 
@@ -43,12 +43,12 @@ sub text-wrap(UInt:D $width is copy, Str:D $text is copy) is export {
         @pieces.shift;
         $indent = ~$text.match(/^(\s+)/)[0];
     }
-    my $ilen = terminal-width($indent);
+    my $ilen = duospace-width($indent);
 
     my @lines;
     my $cur = 0;
     while @pieces.shift -> $piece {
-        my $len = terminal-width($piece);
+        my $len = duospace-width($piece);
         if !$cur || $cur + $len + 1 > $width {
             @lines.push: "$indent$piece";
             $cur = $ilen + $len;
@@ -69,7 +69,7 @@ sub text-columns(UInt:D $width, *@blocks, Str:D :$sep = '  ', Bool :$force-wrap)
     my @fitted;
     for @blocks -> $block {
         @fitted.push: $block.split(/\n/).flatmap({
-            terminal-width($_) <= $width && !$force-wrap ?? $_ !! text-wrap($width, $_)
+            duospace-width($_) <= $width && !$force-wrap ?? $_ !! text-wrap($width, $_)
         });
     }
 
@@ -78,7 +78,7 @@ sub text-columns(UInt:D $width, *@blocks, Str:D :$sep = '  ', Bool :$force-wrap)
     my $max = @fitted.map(*.elems).max;
     my @rows = zip @fitted.map(*.[^$max]);
 
-    @rows.map({ .map({ my $row = $^a || ''; $row ~ ' ' x max(0, $width - terminal-width($row)) }).join($sep) }).join("\n")
+    @rows.map({ .map({ my $row = $^a || ''; $row ~ ' ' x max(0, $width - duospace-width($row)) }).join($sep) }).join("\n")
 }
 
 
@@ -89,7 +89,7 @@ sub evenly-spaced(UInt:D $width, *@cells) is export {
     return '' unless @c;
 
     my $gaps  = max 1, @c - 1;
-    my $chars = @c.map({ terminal-width($_) }).sum;
+    my $chars = @c.map({ duospace-width($_) }).sum;
     my $pad   = ($width - $chars) / $gaps;
 
     my $line = '';
