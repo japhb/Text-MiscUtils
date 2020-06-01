@@ -8,10 +8,15 @@ sub _s(Numeric:D $n, Str $plural = 's', Str $singular = '' --> Str) is export {
 
 #| Convert an integer into an English ordinal
 sub ordinal(Int:D $n --> Str:D) is export {
-    given $n % 10 {
-        when 1  { $n ~ 'st' }
-        when 2  { $n ~ 'nd' }
-        when 3  { $n ~ 'rd' }
-        default { $n ~ 'th' }
+    if 11 <= $n % 100 <= 13 {
+        $n ~ 'th'
+    }
+    else {
+        given $n % 10 {
+            when 1  { $n ~ 'st' }
+            when 2  { $n ~ 'nd' }
+            when 3  { $n ~ 'rd' }
+            default { $n ~ 'th' }
+        }
     }
 }

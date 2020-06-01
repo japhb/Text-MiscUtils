@@ -11,6 +11,7 @@ SYNOPSIS
     # English language utilities
     use Text::MiscUtils::English;
 
+    say ordinal(11);               # '11th'
     say ordinal(23);               # '23rd'
 
     my $n = 2;                     # $n = 1 would give correct singular words

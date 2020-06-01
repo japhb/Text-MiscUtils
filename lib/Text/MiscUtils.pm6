@@ -1,5 +1,5 @@
 use v6.c;
-unit class Text::MiscUtils:ver<0.0.4>;
+unit class Text::MiscUtils:ver<0.0.5>;
 
 
 =begin pod
@@ -13,6 +13,7 @@ Text::MiscUtils - A bag of small text processing tricks
   # English language utilities
   use Text::MiscUtils::English;
 
+  say ordinal(11);               # '11th'
   say ordinal(23);               # '23rd'
 
   my $n = 2;                     # $n = 1 would give correct singular words
