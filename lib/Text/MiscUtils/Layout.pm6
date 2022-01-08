@@ -17,8 +17,8 @@ sub duospace-width(Str:D $text, Bool :$wide-context = False) is export {
     # counts of remaining characters in each width category
     my %ignore is Set = < Mn Mc Me Cc Cf Cs Co Cn >;
     my $counts = colorstrip($text).ords
-                 .grep({ !%ignore{uniprop-str($_, 'General_Category')} })
-                 .map({ uniprop-str($_, 'East_Asian_Width') }).Bag;
+                 .grep({ !%ignore{.uniprop} })
+                 .map({ .uniprop('East_Asian_Width') }).Bag;
 
     $counts<N> + $counts<Na> + $counts<H>   # Generally narrow
     + 2 * ($counts<F> + $counts<W>)         # Always wide
