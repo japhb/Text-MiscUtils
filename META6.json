@@ -12,9 +12,9 @@
   "name": "Text::MiscUtils",
   "perl": "6.d",
   "provides": {
-    "Text::MiscUtils": "lib/Text/MiscUtils.pm6",
-    "Text::MiscUtils::English": "lib/Text/MiscUtils/English.pm6",
-    "Text::MiscUtils::Layout": "lib/Text/MiscUtils/Layout.pm6"
+    "Text::MiscUtils": "lib/Text/MiscUtils.rakumod",
+    "Text::MiscUtils::English": "lib/Text/MiscUtils/English.rakumod",
+    "Text::MiscUtils::Layout": "lib/Text/MiscUtils/Layout.rakumod"
   },
   "resources": [
   ],
