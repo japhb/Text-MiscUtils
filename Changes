@@ -1,0 +1,9 @@
+Revision history for Text-MiscUtils
+
+{{$NEXT}}
+  - First version using new mi6 template; lots of related cleanups/updates
+  - Workaround for https://github.com/rakudo/rakudo/pull/4308/
+
+
+0.0.5
+  - Previous version without Changes file
