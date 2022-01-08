@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/japhb/Text-MiscUtils.svg?branch=master)](https://travis-ci.org/japhb/Text-MiscUtils)
+[![Actions Status](https://github.com/japhb/Text-MiscUtils/workflows/test/badge.svg)](https://github.com/japhb/Text-MiscUtils/actions)
 
 NAME
 ====
