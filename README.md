@@ -1,4 +1,4 @@
-[![Actions Status](https://github.com/japhb/Text-MiscUtils/workflows/test/badge.svg)](https://github.com/japhb/Text-MiscUtils/actions)
+[![Actions Status](https://github.com/japhb/Text-MiscUtils/actions/workflows/test.yml/badge.svg)](https://github.com/japhb/Text-MiscUtils/actions)
 
 NAME
 ====
