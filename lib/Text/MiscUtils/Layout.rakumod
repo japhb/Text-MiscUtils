@@ -5,6 +5,20 @@ unit module Text::MiscUtils::Layout;
 use Terminal::ANSIColor;
 
 
+#| Format a simple glanceable Unicode 1.1 horizontal ruler
+sub horizontal-ruler(UInt:D $width = 80) is export {
+    # 16:9  - 64x18, 80x22.5, 96x27, 112x31.5, 128x36
+    # 16:10 - 64x20, 80x25,   96x30, 112x35,   128x40
+
+    constant $nine    = '¹²³⁴⁵⁶⁷⁸⁹';
+    constant @markers = flat (1..9).map({ chr($_ + 0x2775) }), '│';
+    constant $hundred = @markers.map({ $nine ~ $_ }).join;
+
+    my $ruler = $hundred x (ceiling $width / 100);
+    substr($ruler, 0, $width)
+}
+
+
 #| Calculate monospaced width of a single line of text, ignoring ANSI colors
 #  XXXX: Does not handle cursor-movement control characters such as TAB
 sub duospace-width(Str:D $text, Bool :$wide-context = False) is export {

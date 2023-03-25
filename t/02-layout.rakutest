@@ -2,7 +2,16 @@ use Test;
 use Text::MiscUtils::Layout;
 
 
-plan 75;
+plan 80;
+
+
+# horizontal-ruler()
+
+is horizontal-ruler(0),   '',      'empty horizontal ruler';
+is horizontal-ruler(5),   '¹²³⁴⁵', 'short horizontal ruler';
+is horizontal-ruler(25),  '¹²³⁴⁵⁶⁷⁸⁹❶¹²³⁴⁵⁶⁷⁸⁹❷¹²³⁴⁵', 'mid-length horizontal ruler';
+is horizontal-ruler,      '¹²³⁴⁵⁶⁷⁸⁹❶¹²³⁴⁵⁶⁷⁸⁹❷¹²³⁴⁵⁶⁷⁸⁹❸¹²³⁴⁵⁶⁷⁸⁹❹¹²³⁴⁵⁶⁷⁸⁹❺¹²³⁴⁵⁶⁷⁸⁹❻¹²³⁴⁵⁶⁷⁸⁹❼¹²³⁴⁵⁶⁷⁸⁹❽', 'default horizontal ruler';
+is horizontal-ruler(128), '¹²³⁴⁵⁶⁷⁸⁹❶¹²³⁴⁵⁶⁷⁸⁹❷¹²³⁴⁵⁶⁷⁸⁹❸¹²³⁴⁵⁶⁷⁸⁹❹¹²³⁴⁵⁶⁷⁸⁹❺¹²³⁴⁵⁶⁷⁸⁹❻¹²³⁴⁵⁶⁷⁸⁹❼¹²³⁴⁵⁶⁷⁸⁹❽¹²³⁴⁵⁶⁷⁸⁹❾¹²³⁴⁵⁶⁷⁸⁹│¹²³⁴⁵⁶⁷⁸⁹❶¹²³⁴⁵⁶⁷⁸⁹❷¹²³⁴⁵⁶⁷⁸', 'long horizontal ruler';
 
 
 # duospace-width() -- XXXX: NEEDS TESTS
