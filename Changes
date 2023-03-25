@@ -2,6 +2,10 @@ Revision history for Text-MiscUtils
 
 {{$NEXT}}
 
+0.0.7  2023-03-25T15:54:51-07:00
+  - Add horizontal-ruler() function to Text::MiscUtils::Layout
+
+
 0.0.6  2022-01-07T22:35:24-08:00
   - First version using new mi6 template; lots of related cleanups/updates
   - Workaround for https://github.com/rakudo/rakudo/pull/4308/
