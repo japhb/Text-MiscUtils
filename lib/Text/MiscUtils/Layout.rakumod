@@ -29,10 +29,11 @@ sub duospace-width(Str:D $text, Bool :$wide-context = False) is export {
     # compatibility and General_Category visibility -- first strip out ANSI
     # codes and likely invisible/non-spacing Unicode characters, then sum the
     # counts of remaining characters in each width category
-    my %ignore is Set = < Mn Mc Me Cc Cf Cs Co Cn >;
-    my $counts = colorstrip($text).ords
-                 .grep({ !%ignore{.uniprop} })
-                 .map({ .uniprop('East_Asian_Width') }).Bag;
+    my constant %ignore = < Mn Mc Me Cc Cf Cs Co Cn > Z=> 1 xx *;
+    my $counts = colorstrip($text)
+                 .ords
+                 .map({ .uniprop('East_Asian_Width') unless %ignore{.uniprop} })
+                 .Bag;
 
     $counts<N> + $counts<Na> + $counts<H>   # Generally narrow
     + 2 * ($counts<F> + $counts<W>)         # Always wide
