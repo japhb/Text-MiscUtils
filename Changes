@@ -1,6 +1,9 @@
 Revision history for Text-MiscUtils
 
 {{$NEXT}}
+  - Optimize duospace-width() for 30-40% lower runtime
+  - Workaround various CI testing problems and bugs
+
 
 0.0.7  2023-03-25T15:54:51-07:00
   - Add horizontal-ruler() function to Text::MiscUtils::Layout
