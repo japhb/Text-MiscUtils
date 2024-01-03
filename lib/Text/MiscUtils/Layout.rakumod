@@ -78,6 +78,56 @@ sub text-wrap(UInt:D $width is copy, Str:D $text is copy) is export {
 }
 
 
+#| Duospace-aware text wrapper utility:
+#| Wrap (possibly ANSI colored) $text to $width, adding $prefix at the start of
+#| each line AFTER the first, and $first-prefix to the start of the FIRST line.
+#| Fills lines with spaces to exact width if $fill-trailing is True (default).
+#
+#  Differs from text-wrap above:
+#    * Accepts explicit indent/prefix values, rather than trying to guess
+#    * Defaults to filling short lines with trailing spaces to match width
+#    * Returns an empty array if $text contains only whitespace or is empty
+#
+sub wrap-text(UInt:D $width, Str:D $text, Bool:D :$fill-trailing = True,
+              Str:D :$prefix = '', Str:D :$first-prefix = '') is export {
+    my @words = $text.words;
+    return [] unless @words;
+
+    # Quick out for short text; still joins @words to maintain consistent spacing
+    if $width >= duospace-width($first-prefix ~ $text) {
+        my $line = $first-prefix ~ @words.join(' ');
+        return $line ~ (' ' x ($width - duospace-width($line)) if $fill-trailing);
+    }
+
+    # Invariants:
+    #  * Latest line in @lines always contains at least a prefix and one word
+    #  * No line is wider than $width unless it contains only ONE too-long word
+    #    (no attempt is made to split single words across multiple lines or to
+    #    modify the prefix in such cases)
+    my @lines = $first-prefix ~ @words.shift;
+    my $cur   = duospace-width(@lines[0]);
+    my $plen  = duospace-width($prefix);
+
+    for @words -> $word {
+        my $len = duospace-width($word);
+        # If next word won't fit, use it to start a new line
+        if $cur + $len + 1 > $width {
+            @lines[*-1] ~= ' ' x ($width - $cur) if $fill-trailing && $width > $cur;
+            @lines.push: "$prefix$word";
+            $cur = $plen + $len;
+        }
+        # ... otherwise just extend the last line
+        else {
+            @lines[*-1] ~= " $word";
+            $cur += $len + 1;
+        }
+    }
+    @lines[*-1] ~= ' ' x ($width - $cur) if $fill-trailing && $width > $cur;
+
+    @lines
+}
+
+
 #| Render an array of (possibly ANSI colored) multi-line text blocks horizontally into $width-sized columns
 #  Thus (5, "12\n34\n", "abc\ndefg\nhi", :sep<|>) --> "12   |abc  \n34   |defg \n     |hi   "
 sub text-columns(UInt:D $width, *@blocks, Str:D :$sep = '  ', Bool :$force-wrap) is export {
