@@ -2,6 +2,7 @@ use Test;
 use Text::MiscUtils;
 use Text::MiscUtils::English;
 use Text::MiscUtils::Layout;
+use Text::MiscUtils::Emojify;
 
 
 plan 1;

@@ -1,0 +1,13 @@
+use Test;
+use Text::MiscUtils::Emojify;
+
+
+plan 3;
+
+
+is emojify('⚙'),     '⚙️ ', 'Convert text form to emoji form';
+is textify('😀'),    '😀︎', 'Convert emoji form to text form';
+is toneify('🧑', 6), '🧑🏿', 'Set skin tone';
+
+
+done-testing;

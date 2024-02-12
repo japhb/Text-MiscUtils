@@ -14,6 +14,7 @@
   "perl": "6.d",
   "provides": {
     "Text::MiscUtils": "lib/Text/MiscUtils.rakumod",
+    "Text::MiscUtils::Emojify": "lib/Text/MiscUtils/Emojify.rakumod",
     "Text::MiscUtils::English": "lib/Text/MiscUtils/English.rakumod",
     "Text::MiscUtils::Layout": "lib/Text/MiscUtils/Layout.rakumod"
   },

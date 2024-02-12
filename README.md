@@ -38,6 +38,14 @@ SYNOPSIS
 
     # Note trailing spaces to pad out to width in text-columns() example output
 
+
+    # Emoji/text presentation variations
+    use Text::MiscUtils::Emojify;
+
+    emojify('⚙');      # '⚙️ '
+    textify('😀');     # '😀︎'
+    toneify('🧑', 6);  # '🧑🏿'
+
 DESCRIPTION
 ===========
 
@@ -53,7 +61,7 @@ Geoffrey Broadwell <gjb@sonic.net>
 COPYRIGHT AND LICENSE
 =====================
 
-Copyright 2016-2022 Geoffrey Broadwell
+Copyright 2016-2024 Geoffrey Broadwell
 
 This library is free software; you can redistribute it and/or modify it under the Artistic License 2.0.
 
