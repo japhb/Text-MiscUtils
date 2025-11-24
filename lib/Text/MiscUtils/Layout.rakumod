@@ -19,27 +19,61 @@ sub horizontal-ruler(UInt:D $width = 80) is export {
 }
 
 
-#| Calculate monospaced width of a single line of text, ignoring ANSI colors
+#| Calculate monospaced width of a single line of text, accounting for
+#| narrow and wide characters, ignoring ANSI SGR color/attribute escapes
 #  XXXX: Does not handle cursor-movement control characters such as TAB
 sub duospace-width(Str:D $text, Bool :$wide-context = False) is export {
-    # OLD APPROXIMATION, simply counting NFG characters
-    # colorstrip($text).chars
-
-    # Unicode TR11 approximation, based on legacy character set display width
-    # compatibility and General_Category visibility -- first strip out ANSI
-    # codes and likely invisible/non-spacing Unicode characters, then sum the
-    # counts of remaining characters in each width category
-    my constant %ignore = < Mn Mc Me Cc Cf Cs Co Cn > Z=> 1 xx *;
-    my $counts = colorstrip($text)
-                 .ords
-                 .map({ .uniprop('East_Asian_Width') unless %ignore{.uniprop} })
-                 .Bag;
-
-    $counts<N> + $counts<Na> + $counts<H>   # Generally narrow
-    + 2 * ($counts<F> + $counts<W>)         # Always wide
-    + (1 + $wide-context) * $counts<A>      # Context-dependent
+    duospace-width-core((my str $str = colorstrip($text)),
+                        (my int $context = +$wide-context))
 }
 
+#| Optimized core for duospace-width, when colorstrip is known NOT needed.
+#| If you're not sure which to use, use the regular duospace-width routine.
+#|
+#| Like duospace-width, calculates monospace width of a single line of text,
+#| while being aware of narrow and wide codepoints using the Unicode TR11
+#| width approximation: ignore likely invisible/non-spacing codepoints then
+#| sum the width of the remaining codepoints using their East_Asian_Width
+#| property and a flag for the interpretation of (A)mbiguous width codepoints.
+sub duospace-width-core(str $text, int $wide-context) is export {
+    # Various chunks of this cribbed from Rakudo setting internals
+    use nqp;
+    my constant $gc-prop  = nqp::unipropcode('General_Category');
+    my constant $eaw-prop = nqp::unipropcode('East_Asian_Width');
+    my constant $ignore   = nqp::hash(
+        'Mn', 1, 'Mc', 1, 'Me', 1, 'Cc', 1, 'Cf', 1, 'Cs', 1, 'Co', 1, 'Cn', 1);
+    my constant $narrow   = nqp::hash(
+        'N', 1, 'Na', 1, 'H', 1, 'F', 2, 'W', 2, 'A', 1);
+    my constant $wide     = nqp::hash(
+        'N', 1, 'Na', 1, 'H', 1, 'F', 2, 'W', 2, 'A', 2);
+
+    my $cells := $wide-context ?? $wide !! $narrow;
+    my $codes := nqp::strtocodes(
+        $text,
+        nqp::const::NORMALIZE_NFC,
+        nqp::create(array[uint32])
+    );
+
+    my int  $elems = nqp::elems($codes);
+    my int  $i     = -1;
+    my uint $width = 0;
+    my uint $ord;
+
+    nqp::while(
+        nqp::islt_i(++$i, $elems),
+        nqp::stmts(
+            ($ord = nqp::atpos_u($codes, $i)),
+            nqp::unless(
+                nqp::atkey($ignore, nqp::getuniprop_str($ord, $gc-prop)),
+                ($width = nqp::add_i($width,
+                                     nqp::atkey($cells,
+                                                nqp::getuniprop_str($ord, $eaw-prop)))),
+            )
+        )
+    );
+
+    $width
+}
 
 #| Wrap a single line of (possibly ANSI colored) $text to a given $width
 #  Returns an array of wrapped lines with no trailing newlines.
