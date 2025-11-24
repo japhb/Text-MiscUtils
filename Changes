@@ -2,6 +2,12 @@ Revision history for Text-MiscUtils
 
 {{$NEXT}}
 
+0.0.10  2025-11-23T18:53:08-08:00
+  - Greatly speed up duospace-width(), ~7x on large inputs
+  - Add even faster duospace-width-core() routine usable when
+    ANSI SGR color stripping is _KNOWN_ not needed
+
+
 0.0.9  2024-02-11T21:55:55-08:00
   - Add Text::MiscUtils::Emojify module with Unicode presentation variation tools
 
