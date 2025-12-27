@@ -1,6 +1,10 @@
 Revision history for Text-MiscUtils
 
 {{$NEXT}}
+  - Add is-monospace()/is-monospace-core() to quickly check whether a string
+    contains *NO* width-0 or width-2 characters (except optionally ANSI SGR
+    escapes, in the case of is-monospace)
+
 
 0.0.10  2025-11-23T18:53:08-08:00
   - Greatly speed up duospace-width(), ~7x on large inputs

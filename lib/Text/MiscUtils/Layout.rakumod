@@ -75,6 +75,64 @@ sub duospace-width-core(str $text, int $wide-context) is export {
     $width
 }
 
+
+#| Determine whether a single line of text has any characters that are *NOT*
+#| width 1.  The presence of either width 0 or width 2 characters, or control
+#| characters such as tab and newline, will cause this routine to return False;
+#| otherwise it returns True.  This version strips ANSI SGR color/attribute
+#| escapes before doing the calculation.
+sub is-monospace(Str:D $text, Bool :$wide-context = False) is export {
+    is-monospace-core((my str $str = colorstrip($text)),
+                      (my int $context = +$wide-context))
+}
+
+#| Optimized core for is-monospace, when colorstrip is known NOT needed.  If
+#| you're not sure which to use, use the regular is-monospace routine.
+#|
+#| Like is-monospace, determines whether a single line of text has any
+#| characters that are *NOT* width 1.  The presence of either width 0 or width
+#| 2 characters, or control characters such as tab and newline, will cause this
+#| routine to return False; otherwise it returns True.
+sub is-monospace-core(str $text, int $wide-context) is export {
+    use nqp;
+    my constant $gc-prop  = nqp::unipropcode('General_Category');
+    my constant $eaw-prop = nqp::unipropcode('East_Asian_Width');
+    my constant $zero     = nqp::hash(
+        'Mn', 1, 'Mc', 1, 'Me', 1, 'Cc', 1, 'Cf', 1, 'Cs', 1, 'Co', 1, 'Cn', 1);
+    my constant $a-narrow = nqp::hash('F', 1, 'W', 1);
+    my constant $a-wide   = nqp::hash('F', 1, 'W', 1, 'A', 1);
+
+    my $is-wide := $wide-context ?? $a-wide !! $a-narrow;
+    my $codes := nqp::strtocodes(
+        $text,
+        nqp::const::NORMALIZE_NFC,
+        nqp::create(array[uint32])
+    );
+
+    my int  $elems = nqp::elems($codes);
+    my int  $i     = -1;
+    my uint $mono  = 1;
+    my uint $ord;
+
+    nqp::while(
+        (nqp::iseq_i($mono, 1) && nqp::islt_i(++$i, $elems)),
+        nqp::stmts(
+            ($ord = nqp::atpos_u($codes, $i)),
+            nqp::if(
+                nqp::atkey($zero, nqp::getuniprop_str($ord, $gc-prop)),
+                ($mono = 0),
+                nqp::if(
+                    nqp::atkey($is-wide, nqp::getuniprop_str($ord, $eaw-prop)),
+                    ($mono = 0),
+                )
+            )
+        )
+    );
+
+    ?$mono
+}
+
+
 #| Wrap a single line of (possibly ANSI colored) $text to a given $width
 #  Returns an array of wrapped lines with no trailing newlines.
 #  Doesn't try to split single words wider than $width.

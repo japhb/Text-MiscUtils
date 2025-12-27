@@ -14,7 +14,10 @@ is horizontal-ruler,      '¹²³⁴⁵⁶⁷⁸⁹❶¹²³⁴⁵⁶⁷⁸⁹�
 is horizontal-ruler(128), '¹²³⁴⁵⁶⁷⁸⁹❶¹²³⁴⁵⁶⁷⁸⁹❷¹²³⁴⁵⁶⁷⁸⁹❸¹²³⁴⁵⁶⁷⁸⁹❹¹²³⁴⁵⁶⁷⁸⁹❺¹²³⁴⁵⁶⁷⁸⁹❻¹²³⁴⁵⁶⁷⁸⁹❼¹²³⁴⁵⁶⁷⁸⁹❽¹²³⁴⁵⁶⁷⁸⁹❾¹²³⁴⁵⁶⁷⁸⁹│¹²³⁴⁵⁶⁷⁸⁹❶¹²³⁴⁵⁶⁷⁸⁹❷¹²³⁴⁵⁶⁷⁸', 'long horizontal ruler';
 
 
-# duospace-width() -- XXXX: NEEDS TESTS
+# duospace-width()/duospace-width-core() -- XXXX: NEEDS TESTS
+
+
+# is-monospace()/is-monospace-core() -- XXXX: NEEDS TESTS
 
 
 # text-wrap() -- 23 tests
