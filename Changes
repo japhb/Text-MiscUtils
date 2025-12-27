@@ -1,6 +1,8 @@
 Revision history for Text-MiscUtils
 
 {{$NEXT}}
+
+0.0.11  2025-12-27T11:07:37-08:00
   - Add is-monospace()/is-monospace-core() to quickly check whether a string
     contains *NO* width-0 or width-2 characters (except optionally ANSI SGR
     escapes, in the case of is-monospace)

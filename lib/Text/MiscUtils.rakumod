@@ -1,4 +1,4 @@
-unit class Text::MiscUtils:auth<zef:japhb>:api<0>:ver<0.0.10>;
+unit class Text::MiscUtils:auth<zef:japhb>:api<0>:ver<0.0.11>;
 
 
 =begin pod
