@@ -35,9 +35,14 @@ sub duospace-width(Str:D $text, Bool :$wide-context = False) is export {
 #| width approximation: ignore likely invisible/non-spacing codepoints then
 #| sum the width of the remaining codepoints using their East_Asian_Width
 #| property and a flag for the interpretation of (A)mbiguous width codepoints.
+#|
+#| This routine also handles the special case of a "narrow emoji" that has been
+#| widened with VARIATION SELECTOR-16 in a wide context (in this case, a
+#| terminal that does NOT have the narrow-emoji-needs-space quirk).
 sub duospace-width-core(str $text, int $wide-context) is export {
     # Various chunks of this cribbed from Rakudo setting internals
     use nqp;
+    my constant $e-prop   = nqp::unipropcode('Emoji');
     my constant $gc-prop  = nqp::unipropcode('General_Category');
     my constant $eaw-prop = nqp::unipropcode('East_Asian_Width');
     my constant $ignore   = nqp::hash(
@@ -63,8 +68,26 @@ sub duospace-width-core(str $text, int $wide-context) is export {
         nqp::islt_i(++$i, $elems),
         nqp::stmts(
             ($ord = nqp::atpos_u($codes, $i)),
-            nqp::unless(
+            nqp::if(
+                # If the codepoint would normally be ignorable ...
                 nqp::atkey($ignore, nqp::getuniprop_str($ord, $gc-prop)),
+                nqp::if(
+                    # Handle the special case of wide-context with VS-16 after
+                    # a "narrow" emoji by treating the VS-16 as having width 1 itself
+                    nqp::bitand_i(
+                        nqp::bitand_i($wide-context, nqp::iseq_i($ord, 0xFE0F)),
+                        nqp::isgt_i($i, 0)),
+                    nqp::stmts(
+                        ($ord = nqp::atpos_u($codes, nqp::sub_i($i, 1))),
+                        nqp::if(
+                            nqp::getuniprop_bool($ord, $e-prop),
+                            ($width = nqp::add_i($width,
+                                                 nqp::sub_i(2, nqp::atkey($cells,
+                                                                          nqp::getuniprop_str($ord, $eaw-prop)))))
+                        )
+                    )
+                ),
+                # Otherwise (NOT ignorable), just add to width using cells lookup
                 ($width = nqp::add_i($width,
                                      nqp::atkey($cells,
                                                 nqp::getuniprop_str($ord, $eaw-prop)))),
