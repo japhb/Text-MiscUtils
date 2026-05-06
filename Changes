@@ -1,6 +1,8 @@
 Revision history for Text-MiscUtils
 
 {{$NEXT}}
+
+0.0.12  2026-05-05T22:45:30-07:00
   - Improve duospace-width-core algorithm to handle the special case of a
     "narrow emoji" that has been widened with VS-16 while in a "wide context"
     (a terminal that does NOT have the narrow-emoji-needs-space quirk)
