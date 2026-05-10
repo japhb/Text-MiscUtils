@@ -19,10 +19,16 @@ sub horizontal-ruler(UInt:D $width = 80) is export {
 }
 
 
+#| Width context modes for duospace-width(-core) and is-monospace(-core)
+enum UnicodeWidthContext is export
+     < NarrowContext VS16Context WideContext >;
+
+
 #| Calculate monospaced width of a single line of text, accounting for
 #| narrow and wide characters, ignoring ANSI SGR color/attribute escapes
 #  XXXX: Does not handle cursor-movement control characters such as TAB
-sub duospace-width(Str:D $text, Bool :$wide-context = False) is export {
+sub duospace-width(Str:D $text,
+                   UnicodeWidthContext:D :$wide-context = NarrowContext) is export {
     duospace-width-core((my str $str = colorstrip($text)),
                         (my int $context = +$wide-context))
 }
@@ -52,7 +58,7 @@ sub duospace-width-core(str $text, int $wide-context) is export {
     my constant $wide     = nqp::hash(
         'N', 1, 'Na', 1, 'H', 1, 'F', 2, 'W', 2, 'A', 2);
 
-    my $cells := $wide-context ?? $wide !! $narrow;
+    my $cells := $wide-context == WideContext ?? $wide !! $narrow;
     my $codes := nqp::strtocodes(
         $text,
         nqp::const::NORMALIZE_NFC,
@@ -104,7 +110,8 @@ sub duospace-width-core(str $text, int $wide-context) is export {
 #| characters such as tab and newline, will cause this routine to return False;
 #| otherwise it returns True.  This version strips ANSI SGR color/attribute
 #| escapes before doing the calculation.
-sub is-monospace(Str:D $text, Bool :$wide-context = False) is export {
+sub is-monospace(Str:D $text,
+                 UnicodeWidthContext:D :$wide-context = NarrowContext) is export {
     is-monospace-core((my str $str = colorstrip($text)),
                       (my int $context = +$wide-context))
 }
@@ -125,7 +132,7 @@ sub is-monospace-core(str $text, int $wide-context) is export {
     my constant $a-narrow = nqp::hash('F', 1, 'W', 1);
     my constant $a-wide   = nqp::hash('F', 1, 'W', 1, 'A', 1);
 
-    my $is-wide := $wide-context ?? $a-wide !! $a-narrow;
+    my $is-wide := $wide-context == WideContext ?? $a-wide !! $a-narrow;
     my $codes := nqp::strtocodes(
         $text,
         nqp::const::NORMALIZE_NFC,
