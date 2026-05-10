@@ -1,6 +1,10 @@
 Revision history for Text-MiscUtils
 
 {{$NEXT}}
+  - Improve duospace/monospace algorithms *again* because Unicode width
+    handling is *just that weird*
+  - Add UnicodeWidthContext enum to differentiate tristate needed by above
+
 
 0.0.12  2026-05-05T22:45:30-07:00
   - Improve duospace-width-core algorithm to handle the special case of a
